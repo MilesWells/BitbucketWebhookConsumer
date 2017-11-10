@@ -29,14 +29,17 @@ let io = require('socket.io')(server);
 
 // connect to rooms from query string on connection
 io.sockets.on('connection', socket => {
-    // token is valid, user can join rooms
-    let rooms = socket.handshake.query.rooms;
-    if(rooms !== undefined && rooms !== null) {
-        rooms.split(',').forEach(room => {
-            console.log('user joined room ', room);
-            socket.join(room);
-        });
-    }
+
+    socket.on('joinRoom', room => {
+		console.log(`joining ${room}`)
+        socket.join(room);
+    });
+
+    socket.on('leaveRoom', room => {
+        console.log(`leaving ${room}`)
+        socket.leave(room);
+    })
+
 });
 
 app.io = io;
